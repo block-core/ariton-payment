@@ -30,3 +30,20 @@ is built to run on the same server as PhoenixD and not remotely.
 
 ### GET /status
 
+## Notes
+
+```sh
+sudo systemctl status ariton-payment
+```
+
+```sh
+sudo apt purge nginx nginx-common
+sudo rm -rf /etc/nginx
+sudo systemctl status nginx
+
+# Validate config
+sudo nginx -t
+
+# Reload
+sudo systemctl reload nginx
+```

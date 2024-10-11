@@ -41,12 +41,22 @@ app.use(cors(corsOptions));
 
 /** Route to generate a BOLT-11 invoice */
 app.post("/invoice", async (req, res) => {
-  return invoice(req.params, req, res);
+  try {
+    return invoice(req.params, req, res);
+  } catch (error) {
+    console.error("Error generating invoice:", error);
+    res.status(500).json({ error: "Error generating invoice" });
+  }
 });
 
 /** Route to generate a BOLT-11 invoice */
 app.get("/invoice", async (req, res) => {
-  return invoice(req.query, req, res);
+  try {
+    return invoice(req.query, req, res);
+  } catch (error) {
+    console.error("Error generating invoice:", error);
+    res.status(500).json({ error: "Error generating invoice" });
+  }
 });
 
 const invoice = async (input, req, res) => {
@@ -85,70 +95,82 @@ const invoice = async (input, req, res) => {
 };
 
 app.get("/paid", async (req, res) => {
-  if (!req.query.hash) {
-    console.error("'hash' must be provided");
+  try {
+    if (!req.query.hash) {
+      console.error("'hash' must be provided");
 
-    return res.status(400).json({
-      error: "'hash' must be provided",
-    });
+      return res.status(400).json({
+        error: "'hash' must be provided",
+      });
+    }
+
+    const data = {
+      hash: req.query.hash,
+    };
+
+    const result = await httpClient.get(`/payments/incoming/${data.hash}`);
+    res.json({ paid: result.isPaid });
+  } catch (error) {
+    console.error("Failed to check paid status:", error);
+    res.status(500).json({ error: "Failed to check paid status" });
   }
-
-  const data = {
-    hash: req.query.hash,
-  };
-
-  const result = await httpClient.get(`/payments/incoming/${data.hash}`);
-  res.json({ paid: result.isPaid });
 });
 
 app.get("/decodeinvoice", async (req, res) => {
-  if (!req.query.invoice) {
-    console.error("'invoice' must be provided");
+  try {
+    if (!req.query.invoice) {
+      console.error("'invoice' must be provided");
 
-    return res.status(400).json({
-      error: "'invoice' must be provided",
-    });
+      return res.status(400).json({
+        error: "'invoice' must be provided",
+      });
+    }
+
+    const data = {
+      invoice: req.query.invoice,
+    };
+
+    const decoded = await httpClient.post("/decodeinvoice", data);
+    res.json(decoded);
+  } catch (error) {
+    console.error("Error decoding invoice:", error);
+    res.status(500).json({ error: "Failed to decode invoice" });
   }
-
-  const data = {
-    invoice: req.query.invoice,
-  };
-
-  const decoded = await httpClient.post("/decodeinvoice", data);
-  res.json(decoded);
 });
 
-app.get("/decodeoffer", async (req, res) => {
-  if (!req.query.offer) {
-    console.error("'offer' must be provided");
-
-    return res.offer(400).json({
-      error: "'invoice' must be provided",
-    });
+app.post("/decodeoffer", async (req, res) => {
+  try {
+    const decoded = await httpClient.post("/decodeoffer", data);
+    res.json(decoded);
+  } catch (error) {
+    console.error("Error decoding offer:", error);
+    res.status(500).json({ error: "Failed to decode offer" });
   }
-
-  const data = {
-    offer: req.query.offer,
-  };
-
-  const decoded = await httpClient.post("/decodeoffer", data);
-  res.json(decoded);
 });
 
 /** Route to generate a BOLT-12 offer */
 app.get("/tip", async (req, res) => {
-  const offer = await httpClient.getText("/getoffer");
-  res.json({ tip: offer });
+  try {
+    const offer = await httpClient.getText("/getoffer");
+    res.json({ tip: offer });
+  } catch (error) {
+    console.error("Error getting offer:", error);
+    res.status(500).json({ error: "Failed to get offer" });
+  }
 });
 
 app.get("/status", async (req, res) => {
-  const info = await httpClient.get("/getinfo");
-  //   console.log("INFO:", info);
-  res.json({
-    status: "Running",
-    chain: info.chain,
-    blockHeight: info.blockHeight,
-  });
+  try {
+    const info = await httpClient.get("/getinfo");
+    res.json({
+      status: "Running",
+      chain: info.chain,
+      blockHeight: info.blockHeight,
+    });
+  } catch (error) {
+    console.error("Error getting status:", error);
+    res.status(500).json({ error: "Failed to get status" });
+  }
 });
 
 // Start the server
