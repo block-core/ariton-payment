@@ -17,6 +17,8 @@ const allowedOrigins = [
   "http://localhost:4200",
   "http://localhost:4201",
   "http://localhost:4210",
+  "http://localhost:8080",
+  "http://localhost:8888",
   "https://ariton.app",
   "https://alpha.ariton.app",
   "https://beta.ariton.app",
