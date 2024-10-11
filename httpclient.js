@@ -1,4 +1,9 @@
 import { Buffer } from "buffer";
+import dns from "dns";
+import fetch from "node-fetch";
+
+// Force DNS to use IPv4
+dns.setDefaultResultOrder("ipv4first");
 
 class HttpClient {
   constructor(url, password) {
@@ -37,7 +42,7 @@ class HttpClient {
       const response = await fetch(`${this.url}${path}`, options);
 
       if (!response.ok) {
-        console.log('NOT OK!!');
+        console.log("NOT OK!!");
         console.log(response);
         throw new Error(response.statusText);
       }
