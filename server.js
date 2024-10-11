@@ -178,8 +178,24 @@ app.get("/status", async (req, res) => {
   }
 });
 
+const cache = {
+  data: null,
+  timestamp: null,
+};
+
 app.get("/price", async (req, res) => {
   try {
+    const now = Date.now();
+    const cacheDuration = 30 * 1000; // 30 seconds
+
+    // Check if cache is valid
+    if (cache.data && now - cache.timestamp < cacheDuration) {
+      console.log("RETURNING CACHED DATA");
+      return res.json(cache.data);
+    }
+
+    console.log("FETCHING NEW DATA");
+
     const response = await fetch("https://mempool.space/api/v1/prices");
 
     if (!response.ok) {
@@ -194,7 +210,12 @@ app.get("/price", async (req, res) => {
       // console.log(`Price of 1 BTC: $${usd}`);
       // console.log(`Price of 1 Satoshi: $${satoshiPrice}`);
 
-      res.json({ usd: json.USD, eur: json.EUR, gbp: json.GBP });
+      const data = { usd: json.USD, eur: json.EUR, gbp: json.GBP };
+      
+      cache.data = data;
+      cache.timestamp = now;
+
+      res.json(data);
     } else {
       res.json({ error: "Failed to get price" });
     }
