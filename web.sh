@@ -13,33 +13,33 @@ sudo apt install -y certbot python3-certbot-nginx nginx
 sudo certbot --nginx -d $DOMAIN --email $EMAIL --agree-tos --non-interactive
 
 # Configure Nginx to forward HTTP traffic to local endpoint
-NGINX_CONF="/etc/nginx/sites-available/$DOMAIN"
-sudo bash -c "cat > $NGINX_CONF" <<EOL
-server {
-    listen 80;
-    server_name $DOMAIN;
-    return 301 https://\$host\$request_uri;
-}
+# NGINX_CONF="/etc/nginx/sites-available/$DOMAIN"
+# sudo bash -c "cat > $NGINX_CONF" <<EOL
+# server {
+#     listen 80;
+#     server_name $DOMAIN;
+#     return 301 https://\$host\$request_uri;
+# }
 
-server {
-    listen 443 ssl;
-    server_name $DOMAIN;
+# server {
+#     listen 443 ssl;
+#     server_name $DOMAIN;
 
-    ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
+#     ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
 
-    location / {
-        proxy_pass $LOCAL_ENDPOINT;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-    }
-}
-EOL
+#     location / {
+#         proxy_pass $LOCAL_ENDPOINT;
+#         proxy_set_header Host \$host;
+#         proxy_set_header X-Real-IP \$remote_addr;
+#         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto \$scheme;
+#     }
+# }
+# EOL
 
 # Enable the Nginx configuration
-sudo ln -s /etc/nginx/sites-available/$DOMAIN /etc/nginx/sites-enabled/
+# sudo ln -s /etc/nginx/sites-available/$DOMAIN /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 
 echo "Setup complete. Your site should now be accessible at https://$DOMAIN"
