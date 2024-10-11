@@ -1,3 +1,4 @@
+import cors from "cors";
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
@@ -10,6 +11,24 @@ const port = process.env.port ?? 8080;
 
 const httpClient = new HttpClient(url, password);
 const app = express();
+
+const allowedOrigins = [
+  "http://localhost",
+  "https://alpha.ariton.app",
+  "https://beta.ariton.app",
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+// Step 4: Apply the CORS middleware
+app.use(cors(corsOptions));
 
 // Uncomment if you want public access to wallet balance.
 // app.get("/balance", async (req, res) => {
