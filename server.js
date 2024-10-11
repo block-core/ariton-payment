@@ -98,7 +98,6 @@ app.get("/paid", async (req, res) => {
   };
 
   const result = await httpClient.get(`/payments/incoming/${data.hash}`);
-  console.log("PAID RESULT:", result);
   res.json({ paid: result.isPaid });
 });
 
