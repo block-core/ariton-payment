@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-DOMAIN="alpha.ariton.app"
+DOMAIN="pay.ariton.app"
 EMAIL="post@ariton.app"
 LOCAL_ENDPOINT="http://localhost:8080"
 
