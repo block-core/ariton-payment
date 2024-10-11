@@ -99,12 +99,7 @@ app.get("/paid", async (req, res) => {
 
   const result = await httpClient.get(`/payments/incoming/${data.hash}`);
   console.log("PAID RESULT:", result);
-
-  if (result.isPaid) {
-    res.json({ paid: true });
-  } else {
-    res.json({ paid: true });
-  }
+  res.json({ paid: result.isPaid });
 });
 
 app.get("/decodeinvoice", async (req, res) => {
