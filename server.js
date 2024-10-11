@@ -190,11 +190,8 @@ app.get("/price", async (req, res) => {
 
     // Check if cache is valid
     if (cache.data && now - cache.timestamp < cacheDuration) {
-      console.log("RETURNING CACHED DATA");
       return res.json(cache.data);
     }
-
-    console.log("FETCHING NEW DATA");
 
     const response = await fetch("https://mempool.space/api/v1/prices");
 
@@ -211,7 +208,7 @@ app.get("/price", async (req, res) => {
       // console.log(`Price of 1 Satoshi: $${satoshiPrice}`);
 
       const data = { usd: json.USD, eur: json.EUR, gbp: json.GBP };
-      
+
       cache.data = data;
       cache.timestamp = now;
 
