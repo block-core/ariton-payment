@@ -17,9 +17,12 @@ const allowedOrigins = [
   "http://localhost:4200",
   "http://localhost:4201",
   "http://localhost:4210",
+  "https://ariton.app",
   "https://alpha.ariton.app",
   "https://beta.ariton.app",
+  "https://status.ariton.app",
 ];
+
 const corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.includes(origin) || !origin) {
