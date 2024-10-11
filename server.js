@@ -84,6 +84,29 @@ const invoice = async (input, req, res) => {
   res.json(invoice);
 };
 
+app.get("/paid", async (req, res) => {
+  if (!req.query.hash) {
+    console.error("'hash' must be provided");
+
+    return res.status(400).json({
+      error: "'hash' must be provided",
+    });
+  }
+
+  const data = {
+    hash: req.query.hash,
+  };
+
+  const result = await httpClient.get(`/payments/incoming/${data.hash}`);
+  console.log("PAID RESULT:", result);
+
+  if (result.isPaid) {
+    res.json({ paid: true });
+  } else {
+    res.json({ paid: true });
+  }
+});
+
 app.get("/decodeinvoice", async (req, res) => {
   if (!req.query.invoice) {
     console.error("'invoice' must be provided");
