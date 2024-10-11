@@ -178,6 +178,32 @@ app.get("/status", async (req, res) => {
   }
 });
 
+app.get("/price", async (req, res) => {
+  try {
+    const response = await fetch("https://mempool.space/api/v1/prices");
+
+    if (!response.ok) {
+      return res.status(500).json({ error: response.statusText });
+    }
+
+    const json = await response.json();
+
+    if (json.USD) {
+      // const usd = new Number(json.USD);
+      // const satoshiPrice = usd / 100000000; // Calculate the price of a single satoshi
+      // console.log(`Price of 1 BTC: $${usd}`);
+      // console.log(`Price of 1 Satoshi: $${satoshiPrice}`);
+
+      res.json({ usd: json.USD, eur: json.EUR, gbp: json.GBP });
+    } else {
+      res.json({ error: "Failed to get price" });
+    }
+  } catch (error) {
+    console.error("Error getting status:", error);
+    res.status(500).json({ error: "Failed to get price" });
+  }
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Ariton Payment running at http://localhost:${port}.`);
