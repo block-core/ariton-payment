@@ -14,6 +14,9 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost",
+  "http://localhost:4200",
+  "http://localhost:4201",
+  "http://localhost:4210",
   "https://alpha.ariton.app",
   "https://beta.ariton.app",
 ];
