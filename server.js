@@ -153,6 +153,36 @@ app.post("/decodeoffer", async (req, res) => {
   }
 });
 
+app.get("/payments/incoming", async (req, res) => {
+  try {
+    if (!req.query.apikey) {
+      console.error("'apikey' must be provided");
+
+      return res.status(400).json({
+        error: "'apikey' must be provided",
+      });
+    }
+
+    if (req.query.apikey !== process.env.apikey) {
+      console.error("'apikey' must be valid");
+
+      return res.status(400).json({
+        error: "'apikey' must be valid",
+      });
+    }
+
+    // const data = {
+    //   invoice: req.query.invoice,
+    // };
+
+    const result = await httpClient.get("/payments/incoming");
+    res.json(result);
+  } catch (error) {
+    console.error("Error getting incoming payments:", error);
+    res.status(500).json({ error: "Failed to list incoming payments" });
+  }
+});
+
 /** Route to generate a BOLT-12 offer */
 app.get("/tip", async (req, res) => {
   try {
