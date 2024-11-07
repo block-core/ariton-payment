@@ -175,7 +175,9 @@ app.get("/payments/incoming", async (req, res) => {
     //   invoice: req.query.invoice,
     // };
 
-    const result = await httpClient.get("/payments/incoming");
+    const result = await httpClient.get(
+      `/payments/incoming?all=${req.query.all}&externalId=${req.query.externalId}`
+    );
     res.json(result);
   } catch (error) {
     console.error("Error getting incoming payments:", error);
