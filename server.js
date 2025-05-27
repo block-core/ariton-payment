@@ -23,6 +23,9 @@ const allowedOrigins = [
   "https://alpha.ariton.app",
   "https://beta.ariton.app",
   "https://status.ariton.app",
+  "https://www.nostria.app",
+  "https://nostria.app",
+  "https://status.nostria.app",
 ];
 
 const corsOptions = {
